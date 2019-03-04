@@ -51,14 +51,15 @@ public class CustomerProfileServiceTest {
 
                 verify(customerProfileDataService, times(1)).findAll();
 
-                expect(allCustomers).toEqual(asList(getBaseCustomer(), Customer.builder()
-                    .firstName("Test2")
-                    .lastName("Woo")
-                    .dateOfBirth("10-10-1999")
-                    .homeAddress("03030303")
-                    .officeAddress("05050505")
-                    .email("xyz@email")
-                    .build()));
+                expect(allCustomers).toEqual(asList(getBaseCustomer().toBuilder().id(111).build(), Customer.builder()
+                        .id(222)
+                        .firstName("Test2")
+                        .lastName("Woo")
+                        .dateOfBirth("10-10-1999")
+                        .homeAddress("03030303")
+                        .officeAddress("05050505")
+                        .email("xyz@email")
+                        .build()));
             });
         });
 
@@ -74,7 +75,7 @@ public class CustomerProfileServiceTest {
 
                 verify(customerProfileDataService, times(1)).findById(customerId);
 
-                expect(customer).toEqual(getBaseCustomer());
+                expect(customer).toEqual(getBaseCustomer().toBuilder().id(111).build());
             });
 
             it("should throw exception when id is not found", () -> {
@@ -121,7 +122,7 @@ public class CustomerProfileServiceTest {
 
                Customer createdCustomer = customerProfileService.createCustomer(customer);
 
-               expect(createdCustomer).toEqual(customer);
+               expect(createdCustomer).toEqual(customer.toBuilder().id(111).build());
             });
         });
 
@@ -129,6 +130,7 @@ public class CustomerProfileServiceTest {
             it("Should update the customer data entity from request", () -> {
                 long customerId = 111L;
                 Customer customer = getBaseCustomer();
+                customer.setId(111);
                 customer.setFirstName("Test change");
                 customer.setEmail("xyz@gmail.com");
 

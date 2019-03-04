@@ -2,10 +2,11 @@ package com.ajopaul.qantas.customerprofile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.nio.charset.Charset;
 
 @RestController
 @RequestMapping("/api")
@@ -14,52 +15,85 @@ public class CustomerProfileController {
     @Autowired
     private CustomerProfileService customerProfileService;
 
+    private MediaType JSON_CONTENT_TYPE = new MediaType(MediaType.APPLICATION_JSON.getType(),
+            MediaType.APPLICATION_JSON.getSubtype(),
+            Charset.forName("utf8"));
+
+
     @GetMapping(value = "/customers", produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> fetchAllCustomers() {
         return ResponseEntity.ok()
+                .contentType(JSON_CONTENT_TYPE)
                 .body(ResponseData.success(customerProfileService.getAllCustomers()));
     }
 
-    @GetMapping("/customers/{id}")
+    @GetMapping(value = "/customers/{id}", produces = "application/json")
     public ResponseEntity<?> fetchCustomerProfile(@PathVariable long id) {
         try {
             Customer  customerProfile = customerProfileService.getCustomerProfile(id);
+
             return ResponseEntity
                     .ok()
+                    .contentType(JSON_CONTENT_TYPE)
                     .body(ResponseData.success(customerProfile));
         } catch (CustomerNotFound e){
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
+                    .contentType(JSON_CONTENT_TYPE)
                     .body(ResponseData.error(HttpStatus.NOT_FOUND, e.getShortMessage(), e.getMessage()));
         }
     }
 
-    /*@DeleteMapping("/customers/{id}")
+    @DeleteMapping("/customers/{id}")
     public ResponseEntity<?> deleteCustomer(@PathVariable long id) {
-        CustomerProfileData customerProfileData = customerProfileDataService.findById(id).orElseThrow(() -> CustomerNotFound.builder().id(id).build());
+        try {
+            customerProfileService.deleteCustomer(id);
 
-        customerProfileDataService.delete(customerProfileData);
-        return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
+        } catch (CustomerNotFound e){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .contentType(JSON_CONTENT_TYPE)
+                    .body(ResponseData.error(HttpStatus.NOT_FOUND, e.getShortMessage(), e.getMessage()));
+        }
     }
 
-    @PostMapping("/customers")
-    public CustomerProfileData createCustomer(@RequestBody CustomerProfileData customerProfileData) {
+    @ResponseBody
+    @RequestMapping(consumes="application/json",
+            produces="application/json",
+            method=RequestMethod.POST,
+            value="/customers")
+    public ResponseEntity<?> createCustomer(@RequestBody Customer customer) {
 
-        return customerProfileDataService.save(customerProfileData);
+            Customer  customerProfile = customerProfileService.createCustomer(customer);
 
+            return ResponseEntity
+                    .ok()
+                    .contentType(JSON_CONTENT_TYPE)
+                    .body(ResponseData.success(customerProfile));
     }
 
-    @PutMapping("/customers/{id}")
-    public CustomerProfileData updateCustomer(@RequestBody CustomerProfileData customer, @PathVariable long id) {
+    @ResponseBody
+    @RequestMapping(consumes="application/json",
+            produces="application/json",
+            method=RequestMethod.PUT,
+            value="/customers/{id}")
+    public ResponseEntity<?> updateCustomer(@RequestBody Customer customer, @PathVariable long id) {
 
-        CustomerProfileData customerProfileData = customerProfileDataService.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
+        try {
+            Customer  customerProfile = customerProfileService.updateCustomer(customer, id);
 
-        customerProfileData.setFirstName(customer.getFirstName());
-        customerProfileData.setLastName(customer.getLastName());
-        customerProfileData.setDateOfBirth(customer.getDateOfBirth());
-        customerProfileData.setAddress(customer.getAddress());
+            return ResponseEntity
+                    .ok()
+                    .contentType(JSON_CONTENT_TYPE)
+                    .body(ResponseData.success(customerProfile));
+        } catch (CustomerNotFound e){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .contentType(JSON_CONTENT_TYPE)
+                    .body(ResponseData.error(HttpStatus.NOT_FOUND, e.getShortMessage(), e.getMessage()));
+        }
 
-        return customerProfileDataService.save(customerProfileData);
-    }*/
+    }
 }

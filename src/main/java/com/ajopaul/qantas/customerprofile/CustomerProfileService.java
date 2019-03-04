@@ -63,6 +63,7 @@ public class CustomerProfileService {
 
     private static Customer buildCustomer(CustomerProfileData customerProfileData){
         return Customer.builder()
+            .id(customerProfileData.getId().intValue())
             .firstName(customerProfileData.getFirstName())
             .lastName(customerProfileData.getLastName())
             .dateOfBirth(customerProfileData.getDateOfBirth())

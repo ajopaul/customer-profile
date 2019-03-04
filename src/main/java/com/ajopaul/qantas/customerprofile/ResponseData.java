@@ -5,28 +5,22 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 @Data
+@Builder
 public class ResponseData {
     public Object data;
     public Error error;
 
-    private ResponseData(Object data) {
-        this.data = data;
-    }
-
-    private ResponseData(HttpStatus status, String shortMessage, String detailMessage){
-        this.error = Error.builder().title(shortMessage)
-                .detail(detailMessage)
-                .status(status.toString())
-                .build();
-
-    }
-
     public static ResponseData success(Object data){
-        return new ResponseData(data);
+        return ResponseData.builder().data(data).build();
     }
 
     public static ResponseData error(HttpStatus status, String shortMessage, String detailMessage){
-        return new ResponseData(status, shortMessage, detailMessage);
+        return ResponseData.builder()
+                .error(Error.builder().title(shortMessage)
+                        .detail(detailMessage)
+                        .status(status.toString())
+                        .build())
+                .build();
     }
 
     @Builder
