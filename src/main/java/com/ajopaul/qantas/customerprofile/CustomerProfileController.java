@@ -1,10 +1,9 @@
 package com.ajopaul.qantas.customerprofile;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,15 +14,25 @@ public class CustomerProfileController {
     @Autowired
     private CustomerProfileService customerProfileService;
 
-    @GetMapping("/customers")
-    public List<Customer> fetchAllCustomers() {
-        return customerProfileService.getAllCustomers();
+    @GetMapping(value = "/customers", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<?> fetchAllCustomers() {
+        return ResponseEntity.ok()
+                .body(ResponseData.success(customerProfileService.getAllCustomers()));
     }
 
-
     @GetMapping("/customers/{id}")
-    public Customer fetchCustomerProfile(@PathVariable long id) {
-        return customerProfileService.getCustomerProfile(id);
+    public ResponseEntity<?> fetchCustomerProfile(@PathVariable long id) {
+        try {
+            Customer  customerProfile = customerProfileService.getCustomerProfile(id);
+            return ResponseEntity
+                    .ok()
+                    .body(ResponseData.success(customerProfile));
+        } catch (CustomerNotFound e){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(ResponseData.error(HttpStatus.NOT_FOUND, e.getShortMessage(), e.getMessage()));
+        }
     }
 
     /*@DeleteMapping("/customers/{id}")

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ajopaul.qantas.customerprofile.CustomerNotFound.CUSTOMER_NOT_FOUND;
+
 @Service
 public class CustomerProfileService {
 
@@ -23,12 +25,12 @@ public class CustomerProfileService {
         return customerProfileDataService
             .findById(id)
             .map(CustomerProfileService::buildCustomer)
-            .orElseThrow((() -> new CustomerNotFound(id)));
+            .orElseThrow((() -> CustomerNotFound.builder().id(id).shortMessage(CUSTOMER_NOT_FOUND).build()));
     }
 
     public void deleteCustomer(Long id) {
         CustomerProfileData customerProfileData = customerProfileDataService.findById(id)
-            .orElseThrow(() -> CustomerNotFound.builder().id(id).build());
+            .orElseThrow(() -> CustomerNotFound.builder().id(id).shortMessage(CUSTOMER_NOT_FOUND).build());
 
         customerProfileDataService.delete(customerProfileData);
     }
@@ -42,7 +44,12 @@ public class CustomerProfileService {
 
     public Customer updateCustomer(Customer customer, long id) {
 
-        CustomerProfileData customerProfileData = customerProfileDataService.findById(id).orElseThrow(() -> new CustomerNotFound(id));
+        CustomerProfileData customerProfileData = customerProfileDataService
+                .findById(id)
+                .orElseThrow(() -> CustomerNotFound.builder()
+                        .id(id)
+                        .shortMessage(CUSTOMER_NOT_FOUND)
+                        .build());
 
         customerProfileData.setFirstName(customer.getFirstName());
         customerProfileData.setLastName(customer.getLastName());
