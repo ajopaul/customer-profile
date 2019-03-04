@@ -9,7 +9,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-@Builder
+@Builder(toBuilder = true)
 public class CustomerProfileData {
     @Id
     @GeneratedValue
@@ -17,5 +17,7 @@ public class CustomerProfileData {
     private String firstName;
     private String lastName;
     private String dateOfBirth;
-    private Address address;
+    private String homeAddress;
+    private String officeAddress;
+    private String email;
 }

@@ -8,4 +8,8 @@ import lombok.Data;
 public class Customer {
     private String firstName;
     private String lastName;
+    private String dateOfBirth;
+    private String homeAddress;
+    private String officeAddress;
+    private String email;
 }

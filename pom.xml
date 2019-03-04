@@ -54,6 +54,26 @@
             <version>2.24.0</version>
             <scope>compile</scope>
         </dependency>
+		<!-- Oleaster Matchers -->
+		<dependency>
+			<groupId>com.mscharhag.oleaster</groupId>
+			<artifactId>oleaster-matcher</artifactId>
+			<version>0.2.0</version>
+		</dependency>
+
+		<!-- Oleaster JUnit runner -->
+		<dependency>
+			<groupId>com.mscharhag.oleaster</groupId>
+			<artifactId>oleaster-runner</artifactId>
+			<version>0.2.0</version>
+		</dependency>
+
+		<!-- Of course a JUnit runner can only be used with JUnit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
     </dependencies>
 
 	<build>
