@@ -2,6 +2,7 @@ package com.ajopaul.qantas.customerprofile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,20 +20,13 @@ public class CustomerProfileController {
         return customerProfileService.getAllCustomers();
     }
 
-/*
-    @GetMapping("/customers")
-    public List<CustomerProfileData> fetchAllCustomers() {
-        return customerProfileDataService.findAll();
-    }
 
     @GetMapping("/customers/{id}")
-    public CustomerProfileData fetchCustomerProfile(@PathVariable long id) {
-        return customerProfileDataService
-                .findById(id)
-                .orElseThrow((() -> new RuntimeException("Not Found")));
+    public Customer fetchCustomerProfile(@PathVariable long id) {
+        return customerProfileService.getCustomerProfile(id);
     }
 
-    @DeleteMapping("/customers/{id}")
+    /*@DeleteMapping("/customers/{id}")
     public ResponseEntity<?> deleteCustomer(@PathVariable long id) {
         CustomerProfileData customerProfileData = customerProfileDataService.findById(id).orElseThrow(() -> CustomerNotFound.builder().id(id).build());
 
