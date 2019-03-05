@@ -17,3 +17,7 @@ If all goes well, the API is served on path http://localhost:8080/api/customers/
 
 Swagger UI (Api Docs)
 * http://localhost:8080/swagger-ui.html
+
+Demo
+* http://13.54.55.149:8080/customer-profile/swagger-ui.html
+* http://13.54.55.149:8080/customer-profile/api/customers
