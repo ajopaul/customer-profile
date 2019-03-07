@@ -3,6 +3,8 @@
 * ~~Implement Controller Advice to catch edge case exceptions~~
 * ~~Deploy to ec2 for demo~~
 * ~~Add document~~.
-* Handle empty object / check if id is missing in put/delete/
+* ~~Handle empty object / check if id is missing in put/delete/~~
 * Add additional info to swagger docs
 * ~~Return Id for newly created Customer~~
+* ~~Add Integration test~~
+* Add Basic Authentication

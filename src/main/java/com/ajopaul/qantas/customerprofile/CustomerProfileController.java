@@ -25,7 +25,7 @@ public class CustomerProfileController {
     public ResponseEntity<?> fetchAllCustomers() {
         return ResponseEntity.ok()
                 .contentType(JSON_CONTENT_TYPE)
-                .body(ResponseData.success(customerProfileService.getAllCustomers()));
+                .body(ResponseData.builder().data(customerProfileService.getAllCustomers()).build());
     }
 
     @GetMapping(value = "/customers/{id}", produces = "application/json")
@@ -36,7 +36,7 @@ public class CustomerProfileController {
             return ResponseEntity
                     .ok()
                     .contentType(JSON_CONTENT_TYPE)
-                    .body(ResponseData.success(customerProfile));
+                    .body(ResponseData.builder().data(customerProfile).build());
         } catch (CustomerNotFound e){
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -69,9 +69,9 @@ public class CustomerProfileController {
             Customer  customerProfile = customerProfileService.createCustomer(customer);
 
             return ResponseEntity
-                    .ok()
+                    .status(HttpStatus.CREATED)
                     .contentType(JSON_CONTENT_TYPE)
-                    .body(ResponseData.success(customerProfile));
+                    .body(ResponseData.builder().data(customerProfile).build());
     }
 
     @ResponseBody
@@ -82,12 +82,22 @@ public class CustomerProfileController {
     public ResponseEntity<?> updateCustomer(@RequestBody Customer customer, @PathVariable long id) {
 
         try {
+
+            if (!isRequestValid(customer)) {
+                return ResponseEntity
+                        .badRequest()
+                        .contentType(JSON_CONTENT_TYPE)
+                        .body(ResponseData
+                                .error(HttpStatus.BAD_REQUEST,
+                                        ResponseData.SOMETHING_WENT_WRONG,
+                                        "Request body invalid"));
+            }
             Customer  customerProfile = customerProfileService.updateCustomer(customer, id);
 
             return ResponseEntity
                     .ok()
                     .contentType(JSON_CONTENT_TYPE)
-                    .body(ResponseData.success(customerProfile));
+                    .body(ResponseData.builder().data(customerProfile).build());
         } catch (CustomerNotFound e){
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -95,5 +105,12 @@ public class CustomerProfileController {
                     .body(ResponseData.error(HttpStatus.NOT_FOUND, e.getShortMessage(), e.getMessage()));
         }
 
+    }
+
+    private boolean isRequestValid(Customer customer) {
+
+        return !(customer.getFirstName() == null && customer.getLastName() == null
+                && customer.getDateOfBirth() == null && customer.getHomeAddress() == null
+                && customer.getOfficeAddress() == null && customer.getEmail() == null);
     }
 }

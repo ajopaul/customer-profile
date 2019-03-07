@@ -1,19 +1,19 @@
 package com.ajopaul.qantas.customerprofile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 @Data
 @Builder
-public class ResponseData {
-    public Object data;
-    public Error error;
+public class ResponseData<T> {
+    @JsonIgnore
+    public static final String SOMETHING_WENT_WRONG = "Something went wrong";
+    private T data;
+    private Error error;
 
-    public static ResponseData success(Object data){
-        return ResponseData.builder().data(data).build();
-    }
-
+    @JsonIgnore
     public static ResponseData error(HttpStatus status, String shortMessage, String detailMessage){
         return ResponseData.builder()
                 .error(Error.builder().title(shortMessage)
