@@ -4,7 +4,10 @@
 * ~~Deploy to ec2 for demo~~
 * ~~Add document~~.
 * ~~Handle empty object / check if id is missing in put/delete/~~
-* Add additional info to swagger docs
 * ~~Return Id for newly created Customer~~
 * ~~Add Integration test~~
-* Add Basic Authentication
+* ~~Add additional info to swagger docs~~
+* Add Logger
+* Add Spring Security
+* Add Support for Versioning
+* Import to GitLab and add deployment using gitlab to different environments.
