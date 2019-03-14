@@ -19,15 +19,13 @@ import java.util.Optional;
 public class CustomerProfileExceptionHandler extends ResponseEntityExceptionHandler {
 
 
-    public static final String SOMETHING_WENT_WRONG = "Something went wrong";
-
     @ExceptionHandler({ MethodArgumentTypeMismatchException.class })
     public ResponseEntity<?> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e, WebRequest request) {
         String error = e.getName() +
                 " should be of type " +
                 Optional.ofNullable(e.getRequiredType()).map(Class::getSimpleName).orElse("");
 
-        return new ResponseEntity<>(ResponseData.error(HttpStatus.BAD_REQUEST, SOMETHING_WENT_WRONG, error)
+        return new ResponseEntity<>(ResponseData.error(HttpStatus.BAD_REQUEST, ResponseData.SOMETHING_WENT_WRONG, error)
                 , new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
@@ -37,7 +35,7 @@ public class CustomerProfileExceptionHandler extends ResponseEntityExceptionHand
             , HttpStatus status, WebRequest request) {
 
         String error = "Invalid URL " + e.getHttpMethod() + " " + e.getRequestURL();
-        return new ResponseEntity<>(ResponseData.error(HttpStatus.NOT_FOUND, SOMETHING_WENT_WRONG, error)
+        return new ResponseEntity<>(ResponseData.error(HttpStatus.NOT_FOUND, ResponseData.SOMETHING_WENT_WRONG, error)
                 , new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
@@ -50,7 +48,7 @@ public class CustomerProfileExceptionHandler extends ResponseEntityExceptionHand
         builder.append(" method Not supported. Supported methods are ");
         Optional.ofNullable(e.getSupportedHttpMethods()).map(t -> builder.append(t).append(" "));
 
-        return new ResponseEntity<>(ResponseData.error(HttpStatus.METHOD_NOT_ALLOWED, SOMETHING_WENT_WRONG, builder.toString())
+        return new ResponseEntity<>(ResponseData.error(HttpStatus.METHOD_NOT_ALLOWED, ResponseData.SOMETHING_WENT_WRONG, builder.toString())
                 , new HttpHeaders(),HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -64,7 +62,7 @@ public class CustomerProfileExceptionHandler extends ResponseEntityExceptionHand
                 .append(message)
                 .append("\n");
 
-        return new ResponseEntity<>(ResponseData.error(HttpStatus.BAD_REQUEST, SOMETHING_WENT_WRONG, builder.toString())
+        return new ResponseEntity<>(ResponseData.error(HttpStatus.BAD_REQUEST, ResponseData.SOMETHING_WENT_WRONG, builder.toString())
                 , new HttpHeaders(),HttpStatus.BAD_REQUEST);
     }
 
@@ -77,7 +75,7 @@ public class CustomerProfileExceptionHandler extends ResponseEntityExceptionHand
                 .append("\'")
                 .append(" Not supported. Supported content type: \'application/json\'");
 
-        return new ResponseEntity<>(ResponseData.error(HttpStatus.BAD_REQUEST, SOMETHING_WENT_WRONG, builder.toString())
+        return new ResponseEntity<>(ResponseData.error(HttpStatus.BAD_REQUEST, ResponseData.SOMETHING_WENT_WRONG, builder.toString())
                 , new HttpHeaders(),HttpStatus.BAD_REQUEST);
     }
 
@@ -86,7 +84,7 @@ public class CustomerProfileExceptionHandler extends ResponseEntityExceptionHand
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         String errMsg = e.getMessage();
 
-        return new ResponseEntity<>(ResponseData.error(status, SOMETHING_WENT_WRONG, errMsg), new HttpHeaders(), status);
+        return new ResponseEntity<>(ResponseData.error(status, ResponseData.SOMETHING_WENT_WRONG, errMsg), new HttpHeaders(), status);
     }
 
 }

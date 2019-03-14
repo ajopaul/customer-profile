@@ -174,7 +174,7 @@ public class CustomerProfileControllerTest {
                 this.mockMvc.perform(post("/api/customers")
                                             .contentType(JSON_CONTENT_TYPE)
                                             .content(asJsonString(customer)))
-                        .andExpect(status().isOk())
+                        .andExpect(status().isCreated())
                         .andExpect(content().contentType(JSON_CONTENT_TYPE))
                         .andExpect(content().json("{\n" +
                                 "    \"data\": {\n" +
@@ -197,7 +197,7 @@ public class CustomerProfileControllerTest {
         describe("PUT /api/customers/{id}", () -> {
             it("Should update a customer if it exists", () -> {
                 long customerId = 111L;
-                Customer customer = getBaseCustomer().toBuilder().id(Long.valueOf(customerId).intValue())
+                Customer customer = getBaseCustomer().toBuilder()
                         .firstName("Test Change")
                         .lastName("John Change")
                         .dateOfBirth("10-10-1999")
@@ -205,7 +205,8 @@ public class CustomerProfileControllerTest {
                         .officeAddress("04040404 Change")
                         .email("xxx@email")
                         .build();
-                when(customerProfileService.updateCustomer(customer, customerId)).thenReturn(customer);
+                when(customerProfileService.updateCustomer(customer, customerId))
+                        .thenReturn(customer.toBuilder().id(111).build());
 
                 this.mockMvc.perform(put("/api/customers/"+customerId)
                         .contentType(JSON_CONTENT_TYPE)
@@ -230,7 +231,7 @@ public class CustomerProfileControllerTest {
 
             it("should return 404, when customer does not exist", () -> {
                 long customerId = -1;
-                Customer customer = getBaseCustomer();
+                Customer customer = getBaseCustomer().toBuilder().build();
                 doThrow(CustomerNotFound.builder()
                         .id(customerId)
                         .shortMessage(CUSTOMER_NOT_FOUND)
@@ -252,6 +253,28 @@ public class CustomerProfileControllerTest {
 
                 verify(customerProfileService, times(1)).updateCustomer(customer, customerId);
             });
+
+            it("should return BAD_REQUEST when request body is null or empty", () -> {
+                long customerId = 111L;
+                Customer customer = Customer.builder().build();
+
+                this.mockMvc.perform(put("/api/customers/"+customerId)
+                        .contentType(JSON_CONTENT_TYPE)
+                        .content(asJsonString(customer)))
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().contentType(JSON_CONTENT_TYPE))
+                        .andExpect(content().json("{\n" +
+                                "    \"data\": null, \n" +
+                                "    \"error\": {\n" +
+                                "        \"title\": \"Something went wrong\",\n" +
+                                "        \"status\": \"400 BAD_REQUEST\",\n" +
+                                "        \"detail\": \"Request body invalid\"\n" +
+                                "    }\n" +
+                                "}"));
+
+                verifyZeroInteractions(customerProfileService);
+            });
+
         });
     }
 
