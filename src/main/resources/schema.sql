@@ -13,6 +13,16 @@ CREATE TABLE security_user (
   last_name varchar(255) NOT NULL
 );
 
+CREATE TABLE customer_profile (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  first_name varchar(255) NULL,
+  last_name varchar(255) NULL,
+  email varchar(255) NULL,
+  date_of_birth varchar(255) NULL,
+  home_address varchar(255) NULL,
+  office_address varchar(255) NULL
+);
+
 
 CREATE TABLE user_role (
   user_id BIGINT NOT NULL,
