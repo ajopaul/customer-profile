@@ -7,7 +7,9 @@
 * ~~Return Id for newly created Customer~~
 * ~~Add Integration test~~
 * ~~Add additional info to swagger docs~~
+~~* Add Spring Security~~
+~~* Add PostgreSQL as Dev DB~~
 * Add Logger
-* Add Spring Security
+* Use flyway for migration
 * Add Support for Versioning
 * Import to GitLab and add deployment using gitlab to different environments.

@@ -1,12 +1,11 @@
 CREATE TABLE security_role (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id serial PRIMARY KEY,
   description varchar(100) DEFAULT NULL,
   role_name varchar(100) DEFAULT NULL
 );
 
-
 CREATE TABLE security_user (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id serial PRIMARY KEY,
   username varchar(255) NOT NULL,
   password varchar(255) NOT NULL,
   first_name varchar(255) NOT NULL,
@@ -14,7 +13,7 @@ CREATE TABLE security_user (
 );
 
 CREATE TABLE customer_profile (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  id serial PRIMARY KEY,
   first_name varchar(255) NULL,
   last_name varchar(255) NULL,
   email varchar(255) NULL,
